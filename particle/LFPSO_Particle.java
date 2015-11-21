@@ -19,7 +19,7 @@ public class LFPSO_Particle extends Particle{
     Random rand;
     
     private void init(){
-	DIMENSION = 40;
+	DIMENSION = 30;
 	RANGE[0] = -500;
 	RANGE[1] =  500;
 
@@ -141,19 +141,24 @@ public class LFPSO_Particle extends Particle{
 
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
+	    
+	    if     (velocities[i] > RANGE[1]*0.2) velocities[i] = RANGE[1]*0.2;
+	    else if(velocities[i] < RANGE[0]*0.2) velocities[i] = RANGE[0]*0.2;
+	    
 	}
     }
 
     @Override
     protected void update_position(){
 	for(int i = 0; i < DIMENSION; i++){
-	    double v = velocities[i]%width;
+	    double v = velocities[i];
 
-	    positions[i] = ((positions[i] + v) - RANGE[0])%width;
-	    positions[i] += RANGE[(positions[i] < 0)?1:0];
+	    double p = positions[i] + v;
+	    if     (p > RANGE[1]) positions[i] = p - width;
+	    else if(p < RANGE[0]) positions[i] = p + width;
 	    
 	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
-		System.out.println("positions[" + i + "] is " + positions[i]);
+		System.out.println("hoge positions[" + i + "] is " + positions[i] + "; v = "+ v);
 		System.exit(-1);
 	    }
 	    
