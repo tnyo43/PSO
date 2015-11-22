@@ -55,7 +55,7 @@ class LFPSO{
 	    for(int t = 0; t < T; t++){
 		double gb_score = gbest.get_score();
 		for(LFPSO_Particle p : particles){
-		    p.update(gbest, t);
+		    p.update(gbest, t+1);
 		    
 		    double p_score = p.get_score();
 		    if(p_score > gb_score){

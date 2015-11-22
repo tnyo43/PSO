@@ -95,6 +95,7 @@ public class LFPSO_Particle extends Particle{
 	    trial++;
 	}
     }
+    
 
     private void leavy_flight(Particle gbest){
 	
@@ -104,17 +105,19 @@ public class LFPSO_Particle extends Particle{
 	double[] gbest_position = gbest.get_pbest_positions().clone();
 	double step = 0.01 * u / (Math.pow(Math.abs(v), 1/beta));
 	for(int i = 0; i < DIMENSION; i++){
-	    //positions[i] += step * (positions[i] - gbest_position[i]);
-	    //positions[i] = (positions[i]-RANGE[0])%width;
-	    
-	    positions[i] = (positions[i] + step * (positions[i] - gbest_position[i]) - RANGE[0])%width;
+	    double s = (step * (positions[i] - gbest_position[i]) )%width;
+	    double p = positions[i] + s;
 
-	    positions[i] += RANGE[(positions[i] < 0)?1:0];
+	    if     (p > RANGE[1]) positions[i] = p - width;
+	    else if(p < RANGE[0]) positions[i] = p + width;
+	    else                  positions[i] = p;
+
 	    
 	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
-		System.out.println("positions[" + i + "] is " + positions[i]);
+		System.out.println("positions[" + i + "] is " + positions[i] + "; s = "+ s);
 		System.exit(-1);
 	    }
+	    velocities[i] = 0;
 	}
     }
 
@@ -138,31 +141,29 @@ public class LFPSO_Particle extends Particle{
 	double rand2 = rand.nextDouble() * ro_max;
 
 	double w = 1-iter/200000.0;
-
+	
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
 	    
-	    if     (velocities[i] > RANGE[1]*0.2) velocities[i] = RANGE[1]*0.2;
-	    else if(velocities[i] < RANGE[0]*0.2) velocities[i] = RANGE[0]*0.2;
-	    
+	    //if     (velocities[i] > RANGE[1]*0.2) velocities[i] = RANGE[1]*0.2;
+	    //else if(velocities[i] < RANGE[0]*0.2) velocities[i] = RANGE[0]*0.2;
 	}
     }
 
     @Override
     protected void update_position(){
 	for(int i = 0; i < DIMENSION; i++){
-	    double v = velocities[i];
+	    double v = velocities[i]%(width*0.2);
 
 	    double p = positions[i] + v;
 	    if     (p > RANGE[1]) positions[i] = p - width;
 	    else if(p < RANGE[0]) positions[i] = p + width;
+	    else                  positions[i] = p;
 	    
 	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
-		System.out.println("hoge positions[" + i + "] is " + positions[i] + "; v = "+ v);
+		System.out.println("positions[" + i + "] is " + positions[i] + "; v = "+ v);
 		System.exit(-1);
 	    }
-	    
-	    positions[i] = positions[i] + v;
 	}
     }
 }
