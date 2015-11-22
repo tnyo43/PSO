@@ -1,11 +1,19 @@
 package jp.ac.anan_nct.pso.particle;
 
+import jp.ac.anan_nct.pso.function.*;
+
 import java.util.Random;
 
 public abstract class Particle{
+    protected static Function function;
+
     protected static int DIMENSION;
+    
     protected static double[] RANGE;
     protected static double[] INITIAL_RANGE;
+    protected static double width;
+    protected static double initial_width;
+    
     protected double[] positions;
     protected double[] velocities;
     protected double score;
@@ -14,15 +22,43 @@ public abstract class Particle{
 
     protected Random rand;
     
-
     public abstract Particle clone();
     
-    protected abstract double criterion();
+    protected double criterion(){
+	return function.criterion(positions);
+    }
     
     public abstract void update(Particle gbest, int iter);
-    
-    protected abstract void update_position();
     protected abstract void update_velocity(Particle gbest, int iter);
+
+    protected void update_position(){
+	for(int i = 0; i < DIMENSION; i++){
+	    /*
+	    // double v = (velocities[i])%RANGE[1];
+	    //double v = (int)((velocities[i]-RANGE[0])/(width))*-1*width+RANGE[0];
+	    //double v = (velocities[i]-RANGE[0])%width; //yabaiyatsu
+	    double v = (velocities[i]-RANGE[0])%width;
+	    v += RANGE[0] + ((v<0)?width : 0);
+	    
+	    double p = positions[i] + v;
+	    
+	    if     (p > RANGE[1]) positions[i] = p - width;
+	    else if(p < RANGE[0]) positions[i] = p + width;
+	    else                  positions[i] = p;
+	    */
+
+	    double p = positions[i] + velocities[i];
+	    
+	    if     (p > RANGE[1]) positions[i] = p - width;
+	    else if(p < RANGE[0]) positions[i] = p + width;
+	    else                  positions[i] = p;
+	    
+	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
+		System.out.println("positions[" + i + "] is " + positions[i] + "; v = "+ velocities[i] + "; w = " + width);
+		System.exit(-1);
+	    }
+	}
+    }
 
     public void update_pbest(){
 	double score = criterion();

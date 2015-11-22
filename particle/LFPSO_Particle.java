@@ -1,11 +1,15 @@
 package jp.ac.anan_nct.pso.particle;
 
-import java.util.Random;
 import jp.ac.anan_nct.pso.particle.Particle;
+import jp.ac.anan_nct.pso.function.*;
+
+import java.util.Random;
 import org.apache.commons.math3.special.*;
 
 public class LFPSO_Particle extends Particle{
 
+    private static Function function;
+    
     final static int LIMIT = 10;
     private int trial;
 
@@ -13,28 +17,32 @@ public class LFPSO_Particle extends Particle{
     private double sigma_u;
     private double sigma_v;
 
-    
-    private double         width;
-    private double initial_width;
     Random rand;
     
-    private void init(){
+    private void init(Function function){
+	double[] range = function.get_range();
+	
 	DIMENSION = 30;
-	RANGE[0] = -500;
-	RANGE[1] =  500;
+	RANGE[0] = range[0];
+	RANGE[1] = range[1];
 
-	INITIAL_RANGE[0] = -500;
-	INITIAL_RANGE[1] =  500;
+	INITIAL_RANGE[0] = range[2];
+	INITIAL_RANGE[1] = range[3];
+	
+	width         =         RANGE[1] -         RANGE[0];
+	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
     }
     
-    public LFPSO_Particle(){
+    public LFPSO_Particle(Function function){
+	this.function = function;
+	
 	rand = new Random();
 	
 	RANGE = new double[2];
 	INITIAL_RANGE = new double[2];
-	init();
-	trial = 0;
+	init(function);
 	
+	trial = 0;
 	beta = -2*Math.random()+2;
 	sigma_u = Math.pow(    (Math.exp(Gamma.logGamma(1+beta))*Math.sin(Math.PI*beta/2))
 			       /
@@ -42,8 +50,6 @@ public class LFPSO_Particle extends Particle{
 			       ,1/beta);
 	sigma_v = 1;
 	
-	width         =         RANGE[1] -         RANGE[0];
-	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
 
 	positions = new double[DIMENSION];
 	for(int i = 0; i < DIMENSION; i++){
@@ -63,25 +69,14 @@ public class LFPSO_Particle extends Particle{
 	this.pbest_positions = original.get_pbest_positions();
     }
 
+    @Override
     public LFPSO_Particle clone(){
 	return new LFPSO_Particle(this);
     }
-    
-    protected double criterion(){
-	double sum = 0;
-	
-	for(int i = 0; i < DIMENSION; i++){
-	    double x = positions[i];
 
-	    
-	    //f5
-	    sum += 418.98288727243369 - x * Math.sin(Math.sqrt(Math.abs(x)));
-	    /*
-	    //f6
-	    sum+= x*x -10*Math.cos(2*Math.PI * x)+10; 
-	    */
-	}
-	return -1*sum;
+    @Override
+    protected double criterion(){
+	return function.criterion(positions.clone());
     }
 
     @Override
@@ -95,7 +90,6 @@ public class LFPSO_Particle extends Particle{
 	    trial++;
 	}
     }
-    
 
     private void leavy_flight(Particle gbest){
 	
@@ -112,12 +106,10 @@ public class LFPSO_Particle extends Particle{
 	    else if(p < RANGE[0]) positions[i] = p + width;
 	    else                  positions[i] = p;
 
-	    
 	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
 		System.out.println("positions[" + i + "] is " + positions[i] + "; s = "+ s);
 		System.exit(-1);
 	    }
-	    velocities[i] = 0;
 	}
     }
 
@@ -142,37 +134,12 @@ public class LFPSO_Particle extends Particle{
 
 	double w = 1-iter/200000.0;
 
-	double max = 0;
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
-	    double v = Math.abs(velocities[i]);
-
-	    if(v > max) max = v;
-	    //velocities[i] = (velocities[i]-RANGE[0])%(width*0.2)+RANGE[0];
-	    //if     (velocities[i] > RANGE[1]*0.2) velocities[i] = RANGE[1]*0.2;
-	    //else if(velocities[i] < RANGE[0]*0.2) velocities[i] = RANGE[0]*0.2;
-	}
-	if(max > width/5.0){
-	    for(int i = 0; i < DIMENSION; i++){
-		velocities[i] = velocities[i]/max;
-	    }
-	}
-    }
-
-    @Override
-    protected void update_position(){
-	for(int i = 0; i < DIMENSION; i++){
 	    double v = velocities[i];
 
-	    double p = positions[i] + v;
-	    if     (p > RANGE[1]) positions[i] = p - width;
-	    else if(p < RANGE[0]) positions[i] = p + width;
-	    else                  positions[i] = p;
-	    
-	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
-		System.out.println("positions[" + i + "] is " + positions[i] + "; v = "+ v);
-		System.exit(-1);
-	    }
+	    if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
+	    else if(v >    width*0.2) velocities[i] =    width*0.2;
 	}
     }
 }

@@ -60,7 +60,7 @@ class SPSO{
 	    for(int t = 0; t < T; t++){
 		double gb_score = gbest.get_score();
 		for(SPSO_Particle p : particles){
-		    p.update(gbest, t);
+		    p.update(gbest, t+1);
 		    
 		    double p_score = p.get_score();
 		    if(p_score > gb_score){
@@ -83,7 +83,8 @@ class SPSO{
 	try{
 	    pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 	    for(int i = 0; i < T; i++){
-		pw.println((i+1) + " " + result[i]/ROOP);
+		double r = result[i]/ROOP;
+		pw.println((i+1) + " " + r);
 	    }
 	}catch(Exception e){
 	    System.err.println(e);

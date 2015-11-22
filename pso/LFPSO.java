@@ -1,14 +1,18 @@
 package jp.ac.anan_nct.pso.pso;
 
+import jp.ac.anan_nct.pso.function.*;
+import jp.ac.anan_nct.pso.particle.*;
+
 import java.util.Random;
 import java.text.*;
 import java.io.*;
-import jp.ac.anan_nct.pso.particle.*;
 
 class LFPSO{
     final static int N = 40; //number of particles
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
+    
+    private static Function function;
 
     double[] result;
     double[] last;
@@ -16,12 +20,13 @@ class LFPSO{
     LFPSO_Particle[] particles;
     LFPSO_Particle gbest; //global best
 
-    
     Random r;
     File file;
     PrintWriter pw;
     
     LFPSO(){
+	function = new F5();
+	
 	r = new Random();
 
 	result = new double[T];
@@ -33,7 +38,7 @@ class LFPSO{
 	particles = new LFPSO_Particle[N];
 	gbest = null;
 	for(int i = 0; i < N; i++){
-	    particles[i] = new LFPSO_Particle();
+	    particles[i] = new LFPSO_Particle(function);
 	    if(gbest == null){
 		gbest = particles[i].clone();
 	    }
@@ -66,8 +71,6 @@ class LFPSO{
 
 		result[t] += gbest.get_score();
 		System.out.println(gbest.get_score());
-
-		
 	    }
 
 	    init();
@@ -80,27 +83,26 @@ class LFPSO{
 	try{
 	    pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 	    for(int i = 0; i < T; i++){
-		pw.println((i+1) + " " + result[i]/ROOP);
+		double r = result[i]/ROOP;
+		pw.println((i+1) + " " + r);
 	    }
 	}catch(Exception e){
 	    System.err.println(e);
 	    System.exit(0);
 	}
-	pw.close();
-	
+	pw.close();	
     }
     
     public static void main(String[] args){
 	LFPSO lfpso = new LFPSO();
-
 	
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         System.out.println(calendar.getTime().toString());
-	lfpso.execute("test1.dat");
+	lfpso.execute("LFPSO_test1.dat");
 
 	lfpso = new LFPSO();
 	
-	lfpso.execute("test2.dat");
+	lfpso.execute("LFPSO_test2.dat");
 	calendar = java.util.Calendar.getInstance();
         System.out.println(calendar.getTime().toString());
     }

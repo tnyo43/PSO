@@ -5,11 +5,6 @@ import jp.ac.anan_nct.pso.particle.Particle;
 import jp.ac.anan_nct.pso.function.*;
 
 public class SPSO_Particle extends Particle{
-
-    private double         width;
-    private double initial_width;
-
-    private static Function function;
     
     Random rand;
     
@@ -48,7 +43,6 @@ public class SPSO_Particle extends Particle{
     }
 
     private SPSO_Particle(SPSO_Particle original){
-	//this.function = original.function;
 	this.positions = original.positions.clone();
 	this.velocities = original.velocities.clone();
 	this.score = original.get_score();
@@ -58,11 +52,6 @@ public class SPSO_Particle extends Particle{
     @Override
     public SPSO_Particle clone(){
 	return new SPSO_Particle(this);
-    }
-
-    @Override
-    protected double criterion(){
-	return function.criterion(positions.clone());
     }
 
     @Override
@@ -80,58 +69,13 @@ public class SPSO_Particle extends Particle{
 	double rand2 = rand.nextDouble() * ro_max;
 
 	double w = 0.7213;
-	
-	double max = 0;
+        
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
 	    double v = velocities[i];
-
 	    
 	    if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
 	    else if(v >    width*0.2) velocities[i] =    width*0.2;
-	    /*
-	    if(v > max){
-		max = v;
-	    }
-	    */
-	}
-	/*	
-	if(max > RANGE[1]/5.0){
-	    double reciprocal = RANGE[1] /5.0 /max;
-	    for(int i = 0; i < DIMENSION; i++){
-		velocities[i] = velocities[i]*reciprocal;
-	    }
-	}
-	*/
-    }
-
-    @Override
-    protected void update_position(){
-	for(int i = 0; i < DIMENSION; i++){
-	    /*
-	    // double v = (velocities[i])%RANGE[1];
-	    //double v = (int)((velocities[i]-RANGE[0])/(width))*-1*width+RANGE[0];
-	    //double v = (velocities[i]-RANGE[0])%width; //yabaiyatsu
-	    double v = (velocities[i]-RANGE[0])%width;
-	    v += RANGE[0] + ((v<0)?width : 0);
-	    
-	    double p = positions[i] + v;
-	    
-	    if     (p > RANGE[1]) positions[i] = p - width;
-	    else if(p < RANGE[0]) positions[i] = p + width;
-	    else                  positions[i] = p;
-	    */
-
-	    double p = positions[i] + velocities[i];
-	    
-	    if     (p > RANGE[1]) positions[i] = p - width;
-	    else if(p < RANGE[0]) positions[i] = p + width;
-	    else                  positions[i] = p;
-	    
-	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
-		System.out.println("positions[" + i + "] is " + positions[i] + "; v = "+ velocities[i]);
-		System.exit(-1);
-	    }
 	}
     }
 }
