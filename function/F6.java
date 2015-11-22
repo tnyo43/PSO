@@ -2,7 +2,7 @@ package jp.ac.anan_nct.pso.function;
 
 public class F6 implements Function{ //Rastrigin Function
 
-    private final static double[] RANGE = {-5.12, 5.12, -5.12, 5.12};
+    private final static double[] RANGE = {-5.12, 5.12, -5.12, 2.0};
     
     public double[] get_range(){
 	return RANGE;

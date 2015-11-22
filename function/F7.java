@@ -13,7 +13,6 @@ public class F7 implements Function{ //Ackley
     public double criterion(double[] positions){
 	double sum1 = 0;
 	double sum2 = 0;
-
 	
 	for(int i = 0; i < positions.length; i++){
 	    double x = positions[i];
@@ -23,7 +22,6 @@ public class F7 implements Function{ //Ackley
 	double ave1 = sum1 /positions.length;
 	double ave2 = sum2 /positions.length;
 
-	return 20*Math.exp(-0.2*Math.sqrt(ave1)) +Math.exp(ave2) -20 +Math.E;
-        
+	return 20*Math.exp(-0.2*Math.sqrt(ave1)) +Math.exp(ave2) -20 +Math.E;   
     }
 }

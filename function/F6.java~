@@ -1,5 +1,0 @@
-package jp.ac.anan_nct.pso.function;
-
-class F6 implements Function{
-    
-}

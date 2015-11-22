@@ -25,7 +25,7 @@ class SPSO{
     PrintWriter pw;
 
     SPSO(){
-	function = new F5();
+	function = new F6();
 	
 	r = new Random();
 
