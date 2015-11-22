@@ -9,7 +9,7 @@ public class SPSO_Particle extends Particle{
     private double         width;
     private double initial_width;
 
-    private Function function;
+    private static Function function;
     
     Random rand;
     
@@ -49,7 +49,6 @@ public class SPSO_Particle extends Particle{
 
     private SPSO_Particle(SPSO_Particle original){
 	this.function = original.function;
-	init(this.function);
 	this.positions = original.positions.clone();
 	this.velocities = original.velocities.clone();
 	this.score = original.get_score();
@@ -61,7 +60,7 @@ public class SPSO_Particle extends Particle{
     }
 
     protected double criterion(){
-	return function.criterion(positions);
+	return function.criterion(positions.clone());
     }
 
     public void update(Particle gbest, int iter){
@@ -86,8 +85,9 @@ public class SPSO_Particle extends Particle{
 	    if(v > max) max = v;
 	}
 	if(max > width/5.0){
+	    double reciprocal = width /5.0 /max;
 	    for(int i = 0; i < DIMENSION; i++){
-		velocities[i] = velocities[i]/max;
+		velocities[i] = velocities[i]*reciprocal;
 	    }
 	}
     }

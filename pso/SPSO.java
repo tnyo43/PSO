@@ -4,11 +4,14 @@ import java.util.Random;
 import java.text.*;
 import java.io.*;
 import jp.ac.anan_nct.pso.particle.*;
+import jp.ac.anan_nct.pso.function.*;
 
 class SPSO{
     final static int N = 20; //number of particles
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
+
+    Function function;
 
     double[] result;
     double[] last;
@@ -20,8 +23,11 @@ class SPSO{
     Random r;
     File file;
     PrintWriter pw;
+
     
     SPSO(){
+	function = new F6();
+	
 	r = new Random();
 
 	result = new double[T];
@@ -33,7 +39,7 @@ class SPSO{
 	particles = new SPSO_Particle[N];
 	gbest = null;
 	for(int i = 0; i < N; i++){
-	    particles[i] = new SPSO_Particle();
+	    particles[i] = new SPSO_Particle(function);
 	    if(gbest == null){
 		gbest = particles[i].clone();
 	    }
