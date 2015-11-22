@@ -141,19 +141,28 @@ public class LFPSO_Particle extends Particle{
 	double rand2 = rand.nextDouble() * ro_max;
 
 	double w = 1-iter/200000.0;
-	
+
+	double max = 0;
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
-	    
+	    double v = Math.abs(velocities[i]);
+
+	    if(v > max) max = v;
+	    //velocities[i] = (velocities[i]-RANGE[0])%(width*0.2)+RANGE[0];
 	    //if     (velocities[i] > RANGE[1]*0.2) velocities[i] = RANGE[1]*0.2;
 	    //else if(velocities[i] < RANGE[0]*0.2) velocities[i] = RANGE[0]*0.2;
+	}
+	if(max > RANGE[1]/5.0){
+	    for(int i = 0; i < DIMENSION; i++){
+		velocities[i] = velocities[i]/max;
+	    }
 	}
     }
 
     @Override
     protected void update_position(){
 	for(int i = 0; i < DIMENSION; i++){
-	    double v = velocities[i]%(width*0.2);
+	    double v = velocities[i];
 
 	    double p = positions[i] + v;
 	    if     (p > RANGE[1]) positions[i] = p - width;
