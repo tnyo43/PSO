@@ -17,11 +17,11 @@ public class SPSO_Particle extends Particle{
 	double[] range = function.get_range();
 	
 	DIMENSION = 30;
-	RANGE[0] = range[0];
-	RANGE[1] = range[1];
+	RANGE[0] = -5.12;//range[0];
+	RANGE[1] = 5.12;//range[1];
 
-	INITIAL_RANGE[0] = range[2];
-	INITIAL_RANGE[1] = range[3];
+	INITIAL_RANGE[0] = -5.12;//range[2];
+	INITIAL_RANGE[1] = 5.12;//range[3];
 	
 	        width =         RANGE[1] -         RANGE[0];
 	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
@@ -48,7 +48,7 @@ public class SPSO_Particle extends Particle{
     }
 
     private SPSO_Particle(SPSO_Particle original){
-	this.function = original.function;
+	//this.function = original.function;
 	this.positions = original.positions.clone();
 	this.velocities = original.velocities.clone();
 	this.score = original.get_score();
@@ -84,12 +84,15 @@ public class SPSO_Particle extends Particle{
 
 	    if(v > max) max = v;
 	}
+	
 	if(max > width/5.0){
 	    double reciprocal = width /5.0 /max;
 	    for(int i = 0; i < DIMENSION; i++){
 		velocities[i] = velocities[i]*reciprocal;
 	    }
 	}
+	
+	
     }
 
     protected void update_position(){

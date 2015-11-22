@@ -1,30 +1,29 @@
 package jp.ac.anan_nct.pso.pso;
 
+import jp.ac.anan_nct.pso.function.*;
+import jp.ac.anan_nct.pso.particle.*;
+
 import java.util.Random;
 import java.text.*;
 import java.io.*;
-import jp.ac.anan_nct.pso.particle.*;
-import jp.ac.anan_nct.pso.function.*;
 
 class SPSO{
     final static int N = 20; //number of particles
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
 
-    Function function;
+    private static Function function;
 
     double[] result;
     double[] last;
 
     SPSO_Particle[] particles;
     SPSO_Particle gbest; //global best
-
     
     Random r;
     File file;
     PrintWriter pw;
 
-    
     SPSO(){
 	function = new F6();
 	
@@ -72,8 +71,6 @@ class SPSO{
 
 		result[t] += gbest.get_score();
 		System.out.println(gbest.get_score());
-
-		
 	    }
 
 	    init();
@@ -92,13 +89,11 @@ class SPSO{
 	    System.err.println(e);
 	    System.exit(0);
 	}
-	pw.close();
-	
+	pw.close();	
     }
     
     public static void main(String[] args){
 	SPSO spso = new SPSO();
-
 	
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         System.out.println(calendar.getTime().toString());
