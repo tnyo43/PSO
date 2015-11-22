@@ -2,29 +2,37 @@ package jp.ac.anan_nct.pso.particle;
 
 import java.util.Random;
 import jp.ac.anan_nct.pso.particle.Particle;
+import jp.ac.anan_nct.pso.function.*;
 
 public class SPSO_Particle extends Particle{
 
+    private double         width;
+    private double initial_width;
+
+    private Function function;
+    
     Random rand;
     
-    private void init(){
+    private void init(double[] range){
 	DIMENSION = 30;
-	RANGE[0] = -5.12;
-	RANGE[1] =  5.12;
+	RANGE[0] = range[0];
+	RANGE[1] = range[1];
 
-	INITIAL_RANGE[0] = -5.12;
-	INITIAL_RANGE[1] =  5.12;
+	INITIAL_RANGE[0] = range[2];
+	INITIAL_RANGE[1] = range[3];
     }
     
-    public SPSO_Particle(){
+    public SPSO_Particle(Function function){
+	this.function = function;
+	
 	rand = new Random();
 	
 	RANGE = new double[2];
 	INITIAL_RANGE = new double[2];
-	init();
+	init(function.get_range());
 	
-	double         width =         RANGE[1] -         RANGE[0];
-	double initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
+	        width =         RANGE[1] -         RANGE[0];
+	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
 
 	positions = new double[DIMENSION];
 	for(int i = 0; i < DIMENSION; i++){
@@ -78,17 +86,36 @@ public class SPSO_Particle extends Particle{
 	double rand2 = rand.nextDouble() * ro_max;
 
 	double w = 0.7213;
-
+	
+	double max = 0;
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
+	    double v = Math.abs(velocities[i]);
+
+	    if(v > max) max = v;
+	}
+	if(max > width/5.0){
+	    for(int i = 0; i < DIMENSION; i++){
+		velocities[i] = velocities[i]/max;
+	    }
 	}
     }
 
     protected void update_position(){
 	for(int i = 0; i < DIMENSION; i++){
-	    positions[i] = positions[i] + velocities[i];
-	    if(positions[i] < RANGE[0]) positions[i] = RANGE[0];
-	    if(positions[i] > RANGE[1]) positions[i] = RANGE[1];
+	    double v = velocities[i];
+	    double p = positions[i] + v;
+	    
+	    if     (p > RANGE[1]) positions[i] = p - width;
+	    else if(p < RANGE[0]) positions[i] = p + width;
+	    else                  positions[i] = p;
+
+	    if(positions[i] > RANGE[1] || positions[i] < RANGE[0]){
+		System.out.println("positions[" + i + "] is " + positions[i] + "; v = "+ v);
+		System.exit(-1);
+	    }
 	}
+
+	
     }
 }

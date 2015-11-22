@@ -6,7 +6,7 @@ import java.io.*;
 import jp.ac.anan_nct.pso.particle.*;
 
 class SPSO{
-    final static int N = 100; //number of particles
+    final static int N = 20; //number of particles
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
 
@@ -96,11 +96,11 @@ class SPSO{
 	
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         System.out.println(calendar.getTime().toString());
-	spso.execute("test1.dat");
+	spso.execute("SPSO_test1.dat");
 
 	spso = new SPSO();
 	
-	spso.execute("test2.dat");
+	spso.execute("SPSO_test2.dat");
 	calendar = java.util.Calendar.getInstance();
         System.out.println(calendar.getTime().toString());
     }

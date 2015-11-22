@@ -152,7 +152,7 @@ public class LFPSO_Particle extends Particle{
 	    //if     (velocities[i] > RANGE[1]*0.2) velocities[i] = RANGE[1]*0.2;
 	    //else if(velocities[i] < RANGE[0]*0.2) velocities[i] = RANGE[0]*0.2;
 	}
-	if(max > RANGE[1]/5.0){
+	if(max > width/5.0){
 	    for(int i = 0; i < DIMENSION; i++){
 		velocities[i] = velocities[i]/max;
 	    }

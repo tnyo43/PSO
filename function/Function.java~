@@ -1,0 +1,5 @@
+package jp.ac.anan_nct.pso.function;
+
+abstract class Function implements FuncInterface{
+    
+}
