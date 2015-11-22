@@ -13,13 +13,18 @@ public class SPSO_Particle extends Particle{
     
     Random rand;
     
-    private void init(double[] range){
+    private void init(Function function){
+	double[] range = function.get_range();
+	
 	DIMENSION = 30;
 	RANGE[0] = range[0];
 	RANGE[1] = range[1];
 
 	INITIAL_RANGE[0] = range[2];
 	INITIAL_RANGE[1] = range[3];
+	
+	        width =         RANGE[1] -         RANGE[0];
+	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
     }
     
     public SPSO_Particle(Function function){
@@ -29,10 +34,7 @@ public class SPSO_Particle extends Particle{
 	
 	RANGE = new double[2];
 	INITIAL_RANGE = new double[2];
-	init(function.get_range());
-	
-	        width =         RANGE[1] -         RANGE[0];
-	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
+	init(function);
 
 	positions = new double[DIMENSION];
 	for(int i = 0; i < DIMENSION; i++){
@@ -46,6 +48,8 @@ public class SPSO_Particle extends Particle{
     }
 
     private SPSO_Particle(SPSO_Particle original){
+	this.function = original.function;
+	init(this.function);
 	this.positions = original.positions.clone();
 	this.velocities = original.velocities.clone();
 	this.score = original.get_score();
@@ -57,20 +61,7 @@ public class SPSO_Particle extends Particle{
     }
 
     protected double criterion(){
-	double sum = 0;
-	
-	for(int i = 0; i < DIMENSION; i++){
-	    double x = positions[i];
-
-	    /*
-	    //f5
-	    sum -= x * Math.sin(Math.sqrt(Math.abs(x)));
-	    */
-	    //f6
-	    sum+= x*x -10*Math.cos(2*Math.PI * x)+10; 
-	    
-	}
-	return -1*sum;
+	return function.criterion(positions);
     }
 
     public void update(Particle gbest, int iter){

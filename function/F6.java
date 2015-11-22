@@ -1,6 +1,6 @@
 package jp.ac.anan_nct.pso.function;
 
-class F6 implements Function{ //Rastrigin Function
+public class F6 implements Function{ //Rastrigin Function
 
     public double[] get_range(){
 	double[] RANGE =  {-5.12, 5.12, 5.12, 2};
