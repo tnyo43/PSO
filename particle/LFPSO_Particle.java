@@ -74,7 +74,7 @@ public class LFPSO_Particle extends Particle{
 
     @Override
     public void update_pbest(){
-	double score = criterion();
+	double score = function.criterion(positions);
 	if(score > this.score){
 	    this.score = score;
 	    pbest_positions = positions.clone();

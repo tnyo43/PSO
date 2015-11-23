@@ -8,11 +8,11 @@ import java.text.*;
 import java.io.*;
 
 class LFPSO{
+    static Function function;
+    
     final static int N = 40; //number of particles
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
-    
-    private static Function function;
 
     double[] result;
     double[] last;
@@ -25,15 +25,15 @@ class LFPSO{
     PrintWriter pw;
     
     LFPSO(){
-	function = new F5();
+	function = new F6();
 	
 	r = new Random();
-
+	
 	result = new double[T];
 	last = new double[ROOP];
         init();
     }
-
+    
     void init(){
 	particles = new LFPSO_Particle[N];
 	gbest = null;
