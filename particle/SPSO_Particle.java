@@ -70,23 +70,13 @@ public class SPSO_Particle extends Particle{
 
 	double w = 0.7213;
         
-        //double max = 0;
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_pbest_position(i) - positions[i]);
 	    double v = Math.abs(velocities[i]);
-	    
-            //if(v > max) max = v;
 	    
             if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
 	    else if(v >    width*0.2) velocities[i] =    width*0.2;
             
 	}
-	/*
-        if(max > RANGE[1]*0.2){
-            for(int i = 0; i < DIMENSION; i++){
-                velocities[i] *= RANGE[1]*0.2/max;
-            }
-        }
-	*/
     }
 }
