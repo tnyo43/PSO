@@ -6,7 +6,7 @@ import jp.ac.anan_nct.pso.function.*;
 import java.util.Random;
 import org.apache.commons.math3.special.*;
 
-public class LFPSO_Particle extends Particle{
+public class My_LFPSO_Particle extends Particle{
 
     final static int LIMIT = 10;
     private int trial;
@@ -31,7 +31,7 @@ public class LFPSO_Particle extends Particle{
 	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
     }
     
-    public LFPSO_Particle(Function function){
+    public My_LFPSO_Particle(Function function){
 	this.function = function;
 	
 	rand = new Random();
@@ -60,7 +60,7 @@ public class LFPSO_Particle extends Particle{
 	pbest_positions = positions.clone();
     }
 
-    private LFPSO_Particle(LFPSO_Particle original){
+    private My_LFPSO_Particle(My_LFPSO_Particle original){
 	this.positions = original.positions.clone();
 	this.velocities = original.velocities.clone();
 	this.score = original.get_score();
@@ -68,8 +68,8 @@ public class LFPSO_Particle extends Particle{
     }
 
     @Override
-    public LFPSO_Particle clone(){
-	return new LFPSO_Particle(this);
+    public My_LFPSO_Particle clone(){
+	return new My_LFPSO_Particle(this);
     }
 
     @Override

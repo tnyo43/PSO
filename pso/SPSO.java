@@ -12,8 +12,6 @@ class SPSO{
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
 
-    private static Function function;
-
     double[] result;
     double[] last;
 
