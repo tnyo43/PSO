@@ -9,6 +9,7 @@ import java.io.*;
 
 class SPSO{
     static Function function;
+    
     final static int N = 20; //number of particles
     final static int T = 200000; //number of roops
     final static int ROOP = 30;
@@ -24,7 +25,7 @@ class SPSO{
     PrintWriter pw;
 
     SPSO(){
-	function = new F6();
+	function = new F5();
 	
 	r = new Random();
 
