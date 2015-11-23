@@ -128,7 +128,7 @@ public class LFPSO_Particle extends Particle{
 	double w = 1-iter/200000.0;
 
 	for(int i = 0; i < DIMENSION; i++){
-	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_position(i) - positions[i]);
+	    velocities[i] = w*velocities[i] + rand1*(pbest_positions[i] - positions[i]) + rand2*(gbest.get_pbest_position(i) - positions[i]);
 	    double v = velocities[i];
 
 	    if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
