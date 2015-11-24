@@ -87,7 +87,7 @@ public class MyLFPSO_Particle extends Particle{
     private int look_around(Particle[] particles, int index){
 	int trial = 0;
 	
-	for(int i = index+1; i < 30; i++){
+	for(int i = 0; i < 30; i++){
 	    
 	    double d = 0;
 	    double[] p = particles[i].get_positions();
@@ -96,7 +96,8 @@ public class MyLFPSO_Particle extends Particle{
 	    }
 	    d = Math.sqrt(d);
 
-	    trial += (int)(DIMENSION/d/2);
+	    trial += (int)(DIMENSION/d/2); // 01
+	    //trial += (int)(DIMENSION/d); // 02
 	}
 
 	return trial;

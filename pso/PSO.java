@@ -6,15 +6,12 @@ import java.io.*;
 import jp.ac.anan_nct.pso.particle.*;
 
 class PSO{
-    final static int N = 100; //number of particles
-    final static int T = 10000; //number of roops
-    final static double x_min = -5, x_max = 5;
-    final static double y_min = -5, y_max = 5;
+    static int N; //number of particles
+    static int T; //number of roops
 
     Particle[] particles;
     Particle gbest; //global best
 
-    
     Random r;
     File file;
     PrintWriter pw;
@@ -30,10 +27,7 @@ class PSO{
 	    }
 	    else if(particles[i].get_score() > gbest.get_score()){
 		gbest = particles[i].clone();
-	    }//initialize gbest
-
-	    //  particles[i].set_area(x_min, x_max, y_min, y_max);
-
+	    }
 	}
     }
     

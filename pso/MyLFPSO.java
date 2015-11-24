@@ -47,8 +47,8 @@ class MyLFPSO{
 	    }
 	}
     }
-    
-    void execute(String x){
+
+    void execute(String filename){
 	for(int r = 0; r < ROOP; r++){
 	    java.util.Calendar calendar = java.util.Calendar.getInstance();
 	    System.out.println(calendar.getTime().toString());
@@ -77,8 +77,6 @@ class MyLFPSO{
 	    init();
 	}
 	
-	
-	String file_name = x;
 	file = new File(file_name);
 	
 	try{
@@ -93,7 +91,8 @@ class MyLFPSO{
 	}
 	pw.close();	
     }
-    
+
+    private 
     public static void main(String[] args){
 	MyLFPSO lfpso = new MyLFPSO();
 	
