@@ -18,7 +18,7 @@ public class Particle implements ParticleInterface{
     protected double[] velocities;
     protected double score;
 
-    protected double[] pbestPositions;
+    protected double[] pBestPositions;
 
     protected Random rand;
 
@@ -53,14 +53,14 @@ public class Particle implements ParticleInterface{
 	
 	score = criterion();
 	
-	pbestPositions = positions.clone();
+	pBestPositions = positions.clone();
     }
     
-    private Particle(Particle original){
+    protected Particle(Particle original){
 	this.positions = original.positions.clone();
 	this.velocities = original.velocities.clone();
 	this.score = original.getScore();
-	this.pbestPositions = original.getPBestPositions();
+	this.pBestPositions = original.getPBestPositions();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Particle implements ParticleInterface{
     }
 
     @Override
-    public void update(Particle gbest, int iter){
+    public void update(Particle gbest, int iter, Particle[] particles, int index){
 	updateVelocity(gbest, iter);
 	updatePosition();
 	updatePBest();
@@ -89,7 +89,7 @@ public class Particle implements ParticleInterface{
 	double w = 0.7213;
         
 	for(int i = 0; i < DIMENSION; i++){
-	    velocities[i] = w*velocities[i] + rand1*(pbestPositions[i] - positions[i]) + rand2*(gbest.getPBestPosition(i) - positions[i]);
+	    velocities[i] = w*velocities[i] + rand1*(pBestPositions[i] - positions[i]) + rand2*(gbest.getPBestPosition(i) - positions[i]);
 	    double v = velocities[i];
 	    
             if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
@@ -118,7 +118,7 @@ public class Particle implements ParticleInterface{
 	double score = criterion();
 	if(score > this.score){
 	    this.score = score;
-	    pbestPositions = positions.clone();
+	    pBestPositions = positions.clone();
 	}
     }
 
@@ -149,7 +149,7 @@ public class Particle implements ParticleInterface{
     public void printPBestPosition(){
 	System.out.println("best position:");
 	for(int i = 0; i < DIMENSION; i++){
-	    System.out.println("X" + i + ":" + pbestPositions[i]);
+	    System.out.println("X" + i + ":" + pBestPositions[i]);
 	}
     }
 
@@ -176,10 +176,10 @@ public class Particle implements ParticleInterface{
     }
     @Override
     public double getPBestPosition(int i){
-	return pbestPositions[i];
+	return pBestPositions[i];
     }
     @Override
     public double[] getPBestPositions(){
-	return pbestPositions;
+	return pBestPositions;
     }
 }

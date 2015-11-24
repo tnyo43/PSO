@@ -8,7 +8,7 @@ public interface ParticleInterface{
 
     public ParticleInterface clone();
     
-    public void update(Particle gbest, int iter);
+    public void update(Particle gbest, int iter, Particle[] particles, int index);
     public void updatePBest();
     
     public void printCurrentPosition();
