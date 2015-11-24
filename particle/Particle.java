@@ -4,7 +4,7 @@ import jp.ac.anan_nct.pso.function.*;
 
 import java.util.Random;
 
-public abstract class Particle{
+public class Particle implements ParticleInterface{
     protected static Function function;
 
     protected static int DIMENSION;
@@ -18,35 +18,88 @@ public abstract class Particle{
     protected double[] velocities;
     protected double score;
 
-    protected double[] pbest_positions;
+    protected double[] pbestPositions;
 
     protected Random rand;
-    
-    public abstract Particle clone();
-    
-    protected double criterion(){
-	return function.criterion(positions);
+
+    private void init(Function function, int dimension){
+	double[] range = function.get_range();
+	
+	DIMENSION = dimension;
+	RANGE[0] = range[0];
+	RANGE[1] = range[1];
+	
+	INITIAL_RANGE[0] = range[2];
+	INITIAL_RANGE[1] = range[3];
+	
+	width =         RANGE[1] -         RANGE[0];
+	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
+    }
+
+    public Particle(Function function, int dimension){
+	this.function = function;
+	
+	rand = new Random();
+	
+	RANGE = new double[2];
+	INITIAL_RANGE = new double[2];
+	init(function, dimension);
+	
+	positions = new double[DIMENSION];
+	for(int i = 0; i < DIMENSION; i++){
+	    positions[i] = rand.nextDouble()*(initial_width)+INITIAL_RANGE[0];
+	}
+	velocities = new double[DIMENSION];
+	
+	score = criterion();
+	
+	pbestPositions = positions.clone();
     }
     
-    public abstract void update(Particle gbest, int iter);
-    protected abstract void update_velocity(Particle gbest, int iter);
+    private Particle(Particle original){
+	this.positions = original.positions.clone();
+	this.velocities = original.velocities.clone();
+	this.score = original.getScore();
+	this.pbestPositions = original.getPBestPositions();
+    }
 
-    protected void update_position(){
+    @Override
+    public Particle clone(){
+	return new Particle(this);
+    }
+
+    @Override
+    public double criterion(){
+	return function.criterion(positions);
+    }
+
+    @Override
+    public void update(Particle gbest, int iter){
+	updateVelocity(gbest, iter);
+	updatePosition();
+	updatePBest();
+    }
+
+    private void updateVelocity(Particle gbest, int iter){
+	double ro_max = 1.1931;
+	
+	double rand1 = rand.nextDouble() * ro_max;
+	double rand2 = rand.nextDouble() * ro_max;
+
+	double w = 0.7213;
+        
 	for(int i = 0; i < DIMENSION; i++){
-	    /*
-	    // double v = (velocities[i])%RANGE[1];
-	    //double v = (int)((velocities[i]-RANGE[0])/(width))*-1*width+RANGE[0];
-	    //double v = (velocities[i]-RANGE[0])%width; //yabaiyatsu
-	    double v = (velocities[i]-RANGE[0])%width;
-	    v += RANGE[0] + ((v<0)?width : 0);
+	    velocities[i] = w*velocities[i] + rand1*(pbestPositions[i] - positions[i]) + rand2*(gbest.getPBestPosition(i) - positions[i]);
+	    double v = velocities[i];
 	    
-	    double p = positions[i] + v;
-	    
-	    if     (p > RANGE[1]) positions[i] = p - width;
-	    else if(p < RANGE[0]) positions[i] = p + width;
-	    else                  positions[i] = p;
-	    */
+            if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
+	    else if(v >    width*0.2) velocities[i] =    width*0.2;
+            
+	}	
+    }
 
+    protected void updatePosition(){
+	for(int i = 0; i < DIMENSION; i++){
 	    double p = positions[i] + velocities[i];
 	    
 	    if     (p > RANGE[1]) positions[i] = p - width;
@@ -60,22 +113,25 @@ public abstract class Particle{
 	}
     }
 
-    public void update_pbest(){
+    @Override
+    public void updatePBest(){
 	double score = criterion();
 	if(score > this.score){
 	    this.score = score;
-	    pbest_positions = positions.clone();
+	    pbestPositions = positions.clone();
 	}
     }
-    
-    public void print_position(){
+
+    @Override
+    public void printCurrentPosition(){
 	System.out.println("current position:");
 	for(int i = 0; i < DIMENSION; i++){
 	    System.out.println("X" + i + ":" + positions[i]);
 	}
     }
 
-    public String position_toString(){
+    @Override
+    public String toString(){
 	String pos = "";
 	for(int i = 0; i < DIMENSION; i++){
 	    pos += ((i+1) + " " + positions[i] + "\n");
@@ -83,40 +139,47 @@ public abstract class Particle{
 	return pos;
     }
 
+    @Override
     public void print(){
-	print_pbest_position();
-	print_pbest_score();
+	printPBestPosition();
+	printScore();
     }
-    
-    public void print_pbest_position(){
+
+    @Override
+    public void printPBestPosition(){
 	System.out.println("best position:");
 	for(int i = 0; i < DIMENSION; i++){
-	    System.out.println("X" + i + ":" + pbest_positions[i]);
+	    System.out.println("X" + i + ":" + pbestPositions[i]);
 	}
     }
 
-    public void print_pbest_score(){
+    @Override
+    public void printScore(){
 	System.out.println("best score:" + score + "\n");
     }
-    
-    public int get_dimension(){
+
+    @Override
+    public int getDimension(){
 	return DIMENSION;
     }
-    
-    public double get_position(int i){
+    @Override
+    public double getCurrentPosition(int i){
 	return positions[i];
     }
-    public double[] get_positions(){
+    @Override
+    public double[] getCurrentPositions(){
 	return positions;
     }
-    public double get_score(){
+    @Override
+    public double getScore(){
 	return score;
     }
-
-    public double get_pbest_position(int i){
-	return pbest_positions[i];
+    @Override
+    public double getPBestPosition(int i){
+	return pbestPositions[i];
     }
-    public double[] get_pbest_positions(){
-	return pbest_positions;
+    @Override
+    public double[] getPBestPositions(){
+	return pbestPositions;
     }
 }

@@ -5,8 +5,6 @@ import jp.ac.anan_nct.pso.function.*;
 public interface ParticleInterface{
     public double criterion();
     public double getScore();
-
-    public ParticleInterface clone();
     
     public void update(Particle gbest, int iter);
     public void updatePBest();
