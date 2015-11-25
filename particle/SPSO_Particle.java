@@ -5,9 +5,7 @@ import jp.ac.anan_nct.pso.particle.Particle;
 import jp.ac.anan_nct.pso.function.*;
 
 public class SPSO_Particle extends Particle{
-    
-    Random rand;
-    
+
     private void init(Function function){
 	double[] range = function.get_range();
 	

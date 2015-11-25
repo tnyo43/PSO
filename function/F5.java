@@ -6,7 +6,7 @@ public class F5 implements Function{ //Schwefel2.26
     //RANGE[0] - RANGE[1] is search range
     //RANGE[1] - RANGE[2] is initial range
     
-    public double[] get_range(){
+    public double[] getRange(){
 	return RANGE;
     }
 
