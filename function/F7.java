@@ -14,8 +14,7 @@ public class F7 implements Function{ //Ackley
 	double sum1 = 0;
 	double sum2 = 0;
 	
-	for(int i = 0; i < positions.length; i++){
-	    double x = positions[i];
+	for(double x : positions){
 	    sum1 += x*x;
 	    sum2 += Math.cos(2*Math.PI*x);
 	}
