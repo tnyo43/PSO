@@ -9,34 +9,24 @@ import java.io.*;
 class PSOMain{
     Function function;
     
-    final static int N = 20; //amount of particles
+    static int N; //amount of particles
     final static int FEs = 200000; //number of function evaluations
     final static int DIMENSION = 30; //dimension of the search area
     final static int RUN = 30; //number of running the algorithms
-    final static Function[] functions = {new F5(), new F6()};
-    
+    final static Function[] functions = {new F1(), new F2(), new F3(), new F4(), new F5(), new F6(), new F7()}; //array of functions, and you can select one designating its index
+ 
     Particle[] particles;
     Particle gBest; //global best
 
     double[] results; //sum of the score of gBest for each evaluation
     double[] finals; //final score of gBest in each runs
-    
-    private PSOMain(){
-	function = functions[1];
-	
-	Random r = new Random();
-
-	init();
-	results = new double[FEs];
-	finals = new double[RUN];
-    }
-    
-    void init(){
+      
+    void init(Particle p){
 	particles = new Particle[N];
 	gBest = null;
 	
 	for(int i = 0; i < N; i++){
-	    particles[i] = new LFPSO_Particle(function, DIMENSION);
+	    particles[i] = p.creatNew();
 	    if(gBest == null){
 		gBest = particles[i].clone();
 	    }
@@ -44,6 +34,32 @@ class PSOMain{
 		gBest = particles[i].clone();
 	    }
 	}
+    }
+    
+    private PSOMain(int funcNum, int partiIdx){
+	function = functions[funcNum-1];
+
+	Particle p;
+	switch(partiIdx){
+	case 1:
+	    p = new Particle(function, DIMENSION);
+	    break;
+	case 2:
+	    p = new LFPSO_Particle(function, DIMENSION);
+	    break;
+	case 3:
+	    p = new MyLFPSO_Particle(function, DIMENSION);
+	    break;
+	default:
+	    p = new Particle(function, DIMENSION);
+	}
+	N = p.getAmount();
+	
+	Random r = new Random();
+
+	init(p);
+	results = new double[FEs];
+	finals = new double[RUN];
     }
 
     protected void updateGBest(){
@@ -81,7 +97,7 @@ class PSOMain{
 		double r = results[t]/RUN;
 		pw.println((t+1) + " " + r);	
 	    }
-	    pw.println("\nstd = " + std(results));
+	    pw.println("\nstd = " + std(finals));
 	    
 	    pw.close();
 	}catch(IOException e){
@@ -97,16 +113,16 @@ class PSOMain{
 		}
 		updateGBest();
 		results[t] += gBest.getScore();
-		System.out.println((r+1) + "\t" + (t/1000) + "\t" + gBest.getScore());
+		System.out.println((r+1) + "\t" + (t/10000) + "\t" + gBest.getScore());
 	    }
 	    finals[r] = gBest.getScore();
 
-	    init();
+	    init(gBest);
 	}
     }
     
     public static void main(String[] args){
-	PSOMain pso = new PSOMain();
+	PSOMain pso = new PSOMain(6, 2);
 	pso.execute();
 	pso.fileWrite("PSOtest.dat");
     }

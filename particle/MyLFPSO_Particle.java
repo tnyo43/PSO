@@ -27,6 +27,11 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
     public MyLFPSO_Particle clone(){
 	return new MyLFPSO_Particle(this);
     }
+    
+    @Override
+    public MyLFPSO_Particle creatNew(){
+	return new MyLFPSO_Particle(function, DIMENSION);
+    }
 
     @Override
     public void updatePBest(){

@@ -38,6 +38,16 @@ public class LFPSO_Particle extends Particle{
     }
 
     @Override
+    public LFPSO_Particle creatNew(){
+	return new LFPSO_Particle(function, DIMENSION);
+    }
+
+    @Override
+    public int getAmount(){
+	return 40;
+    }
+
+    @Override
     public void updatePBest(){
 	double score = function.criterion(positions);
 	if(score > this.score){
@@ -98,5 +108,10 @@ public class LFPSO_Particle extends Particle{
 	    if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
 	    else if(v >    width*0.2) velocities[i] =    width*0.2;
 	}
+    }
+
+    @Override
+    public void printType(){
+	System.out.println("Levy Flight PSO");
     }
 }

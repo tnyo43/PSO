@@ -22,7 +22,13 @@ public class Particle implements ParticleInterface{
 
     protected Random rand;
 
-    private void init(Function function, int dimension){
+    public Particle(Function function, int dimension){
+	this.function = function;
+	
+	rand = new Random();
+	
+	RANGE = new double[2];
+	INITIAL_RANGE = new double[2];
 	double[] range = function.getRange();
 	
 	DIMENSION = dimension;
@@ -34,16 +40,6 @@ public class Particle implements ParticleInterface{
 	
 	width =         RANGE[1] -         RANGE[0];
 	initial_width = INITIAL_RANGE[1] - INITIAL_RANGE[0];
-    }
-
-    public Particle(Function function, int dimension){
-	this.function = function;
-	
-	rand = new Random();
-	
-	RANGE = new double[2];
-	INITIAL_RANGE = new double[2];
-	init(function, dimension);
 	
 	positions = new double[DIMENSION];
 	for(int i = 0; i < DIMENSION; i++){
@@ -66,6 +62,14 @@ public class Particle implements ParticleInterface{
     @Override
     public Particle clone(){
 	return new Particle(this);
+    }
+
+    public Particle creatNew(){
+	return new Particle(function, DIMENSION);
+    }
+
+    public int getAmount(){
+	return 10+(int)(2*Math.sqrt(DIMENSION));
     }
 
     @Override
@@ -156,6 +160,10 @@ public class Particle implements ParticleInterface{
     @Override
     public void printScore(){
 	System.out.println("best score:" + score + "\n");
+    }
+
+    public void printType(){
+	System.out.println("state-of-the-art PSO");
     }
 
     @Override
