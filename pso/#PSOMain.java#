@@ -13,7 +13,7 @@ class PSOMain{
     final static int FEs = 200000; //number of function evaluations
     final static int DIMENSION = 30; //dimension of the search area
     final static int RUN = 30; //number of running the algorithms
-    final static Function[] functions = {new F5(), new F6()};
+    final static Function[] functions = {new F1(), new F2(), new F3(), new F4(), new F5(), new F6(), new F7()};
     
     Particle[] particles;
     Particle gBest; //global best
@@ -21,7 +21,7 @@ class PSOMain{
     double[] results; //sum of the score of gBest for each evaluation
     double[] finals; //final score of gBest in each runs
     
-    private PSO(){
+    private PSOMain(){
 	function = functions[1];
 	
 	Random r = new Random();
@@ -97,7 +97,7 @@ class PSOMain{
 		}
 		updateGBest();
 		results[t] += gBest.getScore();
-		System.out.println((t/1000) + "\t" + gBest.getScore());
+		System.out.println((r+1) + "\t" + (t/1000) + "\t" + gBest.getScore());
 	    }
 	    finals[r] = gBest.getScore();
 

@@ -6,7 +6,7 @@ import jp.ac.anan_nct.pso.function.*;
 import java.util.Random;
 import java.io.*;
 
-class PSOMain{
+class PSO{
     Function function;
     
     final static int N = 20; //amount of particles
@@ -106,7 +106,7 @@ class PSOMain{
     }
     
     public static void main(String[] args){
-	PSOMain pso = new PSOMain();
+	PSO pso = new PSO();
 	pso.execute();
 	pso.fileWrite("PSOtest.dat");
     }

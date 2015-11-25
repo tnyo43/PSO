@@ -23,7 +23,7 @@ public class Particle implements ParticleInterface{
     protected Random rand;
 
     private void init(Function function, int dimension){
-	double[] range = function.get_range();
+	double[] range = function.getRange();
 	
 	DIMENSION = dimension;
 	RANGE[0] = range[0];

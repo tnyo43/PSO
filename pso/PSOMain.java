@@ -21,7 +21,7 @@ class PSOMain{
     double[] results; //sum of the score of gBest for each evaluation
     double[] finals; //final score of gBest in each runs
     
-    private PSO(){
+    private PSOMain(){
 	function = functions[1];
 	
 	Random r = new Random();
@@ -97,7 +97,7 @@ class PSOMain{
 		}
 		updateGBest();
 		results[t] += gBest.getScore();
-		System.out.println((t/1000) + "\t" + gBest.getScore());
+		System.out.println((r+1) + "\t" + (t/1000) + "\t" + gBest.getScore());
 	    }
 	    finals[r] = gBest.getScore();
 
