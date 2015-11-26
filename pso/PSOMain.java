@@ -9,9 +9,9 @@ import java.io.*;
 class PSOMain{
     Function function;
     
-    static int N; //amount of particles
+    static int P; //population size
     final static int FEs = 200000; //number of function evaluations
-    final static int DIMENSION = 30; //dimension of the search area
+    static int DIMENSION; //dimension of the search area
     final static int RUN = 30; //number of running the algorithms
     final static Function[] functions = {new F1(), new F2(), new F3(), new F4(), new F5(), new F6(), new F7()}; //array of functions, and you can select one designating its index
  
@@ -22,10 +22,10 @@ class PSOMain{
     double[] finals; //final score of gBest in each runs
       
     void init(Particle p){
-	particles = new Particle[N];
+	particles = new Particle[P];
 	gBest = null;
 	
-	for(int i = 0; i < N; i++){
+	for(int i = 0; i < P; i++){
 	    particles[i] = p.creatNew();
 	    if(gBest == null){
 		gBest = particles[i].clone();
@@ -36,9 +36,10 @@ class PSOMain{
 	}
     }
     
-    private PSOMain(int funcNum, int partiIdx){
+    private PSOMain(int funcNum, int partiIdx, int dimension){
 	function = functions[funcNum-1];
-
+	DIMENSION = dimension;
+	
 	Particle p;
 	switch(partiIdx){
 	case 1:
@@ -53,7 +54,7 @@ class PSOMain{
 	default:
 	    p = new Particle(function, DIMENSION);
 	}
-	N = p.getAmount();
+	P = p.getAmount();
 	
 	Random r = new Random();
 
@@ -104,27 +105,32 @@ class PSOMain{
 	    System.err.println(e);
 	}
     }
+
+    protected void runEvaluation(int r){
+	for(int t = 0; t < FEs; t++){
+	    for(int i = 0; i < P; i++){
+		particles[i].update(gBest, 1.0-(i/FEs), particles, i);
+	    }
+	    updateGBest();
+	    results[t] += gBest.getScore();
+	    System.out.println((r) + "\t" + (t/10000) + "\t" + gBest.getScore());
+	}
+	finals[r] = gBest.getScore();
+	
+	init(gBest);
+    }
     
     protected void execute(){
-	for(int r = 0; r < RUN; r++){
-	    for(int t = 0; t < FEs; t++){
-		for(int i = 0; i < particles.length; i++){
-		    particles[i].update(gBest, 1.0-(i/FEs), particles, i);
-		}
-		updateGBest();
-		results[t] += gBest.getScore();
-		System.out.println((r+1) + "\t" + (t/10000) + "\t" + gBest.getScore());
-	    }
-	    finals[r] = gBest.getScore();
-
-	    init(gBest);
+	for(int r = 1; r <= RUN; r++){
+	    runEvaluation(r);
 	}
     }
     
     public static void main(String[] args){
-	PSOMain pso = new PSOMain(6, 3);
+	PSOMain pso = new PSOMain(6, 2, 30);
 	//1st argument -> index of the function(1~7)
 	//2nd argument -> index of the particle(1~3)
+	//3rd argument -> dimension of the search area
 	
 	pso.execute();
 	pso.fileWrite("PSOtest.dat");
