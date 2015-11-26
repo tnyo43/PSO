@@ -77,6 +77,9 @@ public class Particle implements ParticleInterface{
 	return function.criterion(positions);
     }
 
+    protected void addTrial(){
+    }
+
     @Override
     public void update(Particle gbest, int iter, Particle[] particles, int index){
 	updateVelocity(gbest, iter);

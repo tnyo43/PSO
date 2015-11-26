@@ -9,6 +9,8 @@ import org.apache.commons.math3.special.*;
 public class MyLFPSO_Particle extends LFPSO_Particle{
 
     final static int LIMIT = 10;
+    final static int DISTANCE = 30;
+    final static int THRESHOLD = 20
     private int trial;
 
     private double beta;
@@ -39,38 +41,41 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 	if(score > this.score){
 	    this.score = score;
 	    pBestPositions = positions.clone();
-	    trial = 0;
 	}else{
-	    trial++;
+	    
 	}
     }
 
-    private int lookAround(Particle[] particles, int index){
-	int trial = 0;
-	
-	for(int i = 0; i < 30; i++){
-	    
-	    double d = 0;
-	    double[] p = particles[i].getCurrentPositions();
-	    for(int j = 0; j < DIMENSION; j++){
-		d += Math.pow((positions[j]-p[j]),2);
-	    }
-	    d = Math.sqrt(d);
+    protected void addTrial(){
+	trial++;
+    }
 
-	    trial += (int)(DIMENSION/d/2); // 01
-	    //trial += (int)(DIMENSION/d); // 02
+    private void lookAround(Particle[] particles, int index){
+	double[] p0 = particles[index].getCurrentPositions();
+
+	for(int i = index+1; i < particles.length; i++){
+	    double[] p = particles[i].getCurrentPositions();
+
+	    double sum = 0;
+	    for(int j = 0; j < DIMENSION; i++){
+		sum += Math.pow((p0[j]-p[j]),2);
+	    }
+
+	    if(!(sum < THRESHOLD)){
+		trial++;
+		particles[i].addTrial();
+	    }
 	}
-	return trial;
     }
 
     public void update(Particle gbest, int iter, Particle[] particles, int index){
-	if(lookAround(particles, index) < LIMIT){
+	if(trial < LIMIT){
 	    updateVelocity(gbest, iter);
 	    updatePosition();
 	}else{
 	    leavyFlight(gbest);
-	    trial = 0;
 	}
+	trial = 0;
 	updatePBest();
     }
 }

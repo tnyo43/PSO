@@ -122,7 +122,7 @@ class PSOMain{
     }
     
     public static void main(String[] args){
-	PSOMain pso = new PSOMain(6, 2);
+	PSOMain pso = new PSOMain(6, 3);
 	//1st argument -> index of the function(1~7)
 	//2nd argument -> index of the particle(1~3)
 	pso.execute();
