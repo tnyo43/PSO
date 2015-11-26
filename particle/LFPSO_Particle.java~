@@ -1,6 +1,0 @@
-package jp.ac.anan_nct.pso.particle;
-
-import java.util.Random;
-import jp.ac.anan_nct.pso.particle.Particle;
-
-public LFPSO_Particle extends Particle

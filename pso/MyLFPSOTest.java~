@@ -1,9 +1,0 @@
-package jp.ac.anan_nct.pso.pso;
-
-import jp.ac.anan_nct.pso.particle.*;
-import jp.ac.anan_nct.pso.function.*;
-
-import java.util.Random;
-import java.io.*;
-
-class MyLFPSOTest extends PSOMain{
