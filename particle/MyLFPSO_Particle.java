@@ -8,9 +8,8 @@ import org.apache.commons.math3.special.*;
 
 public class MyLFPSO_Particle extends LFPSO_Particle{
 
-    final static int LIMIT = 10;
-    final static int DISTANCE = 30;
-    final static int THRESHOLD = 10;
+    static int LIMIT = 10;
+    static int THRESHOLD = 10;
     private int trial;
 
     private double beta;
@@ -33,6 +32,14 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
     @Override
     public MyLFPSO_Particle creatNew(){
 	return new MyLFPSO_Particle(function, DIMENSION);
+    }
+
+    public void setThreshold(int t){
+	THRESHOLD = t;
+    }
+
+    public void setLimit(int l){
+	LIMIT = l;
     }
 
     @Override

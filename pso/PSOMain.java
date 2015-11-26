@@ -12,16 +12,16 @@ class PSOMain{
     static int P; //population size
     final static int FEs = 200000; //number of function evaluations
     static int DIMENSION; //dimension of the search area
-    final static int RUN = 30; //number of running the algorithms
+    static int RUN = 30; //number of running the algorithms
     final static Function[] functions = {new F1(), new F2(), new F3(), new F4(), new F5(), new F6(), new F7()}; //array of functions, and you can select one designating its index
  
-    Particle[] particles;
-    Particle gBest; //global best
+    private Particle[] particles;
+    private Particle gBest; //global best
 
     double[] results; //sum of the score of gBest for each evaluation
     double[] finals; //final score of gBest in each runs
       
-    void init(Particle p){
+    private void init(Particle p){
 	particles = new Particle[P];
 	gBest = null;
 	
@@ -36,8 +36,13 @@ class PSOMain{
 	}
     }
     
-    private PSOMain(int funcNum, int partiIdx, int dimension){
-	function = functions[funcNum-1];
+    protected PSOMain(int funcNum, int partiIdx, int dimension){
+	try{
+	    function = functions[funcNum-1];
+	}catch(ArrayIndexOutOfBoundsException e){
+	    System.err.println(e.toString());
+	    System.exit(0);
+	}
 	DIMENSION = dimension;
 	
 	Particle p;
@@ -64,10 +69,11 @@ class PSOMain{
     }
 
     protected void updateGBest(){
-	double bestScore = -Double.MAX_VALUE;
+	double gBestScore = gBest.getScore();
 	for(Particle p : particles){
-	    if(p.getScore() > bestScore){
-		bestScore = p.getScore();
+	    double piBestScore = p.getScore();
+	    if(piBestScore > gBestScore){
+		gBestScore = piBestScore;
 		gBest = p.clone();
 	    }
 	}
@@ -109,7 +115,7 @@ class PSOMain{
     protected void runEvaluation(int r){
 	for(int t = 0; t < FEs; t++){
 	    for(int i = 0; i < P; i++){
-		particles[i].update(gBest, 1.0-(i/FEs), particles, i);
+		particles[i].update(gBest, 1.0-((i+1)/FEs), particles, i);
 	    }
 	    updateGBest();
 	    results[t] += gBest.getScore();
@@ -120,14 +126,14 @@ class PSOMain{
 	init(gBest);
     }
     
-    protected void execute(){
+    private void execute(){
 	for(int r = 1; r <= RUN; r++){
 	    runEvaluation(r);
 	}
     }
     
     public static void main(String[] args){
-	PSOMain pso = new PSOMain(6, 2, 30);
+	PSOMain pso = new PSOMain(6, 1, 30);
 	//1st argument -> index of the function(1~7)
 	//2nd argument -> index of the particle(1~3)
 	//3rd argument -> dimension of the search area
