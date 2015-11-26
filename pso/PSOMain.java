@@ -109,7 +109,7 @@ class PSOMain{
 	for(int r = 0; r < RUN; r++){
 	    for(int t = 0; t < FEs; t++){
 		for(int i = 0; i < particles.length; i++){
-		    particles[i].update(gBest, t, particles, i);
+		    particles[i].update(gBest, 1.0-(i/FEs), particles, i);
 		}
 		updateGBest();
 		results[t] += gBest.getScore();
@@ -125,6 +125,7 @@ class PSOMain{
 	PSOMain pso = new PSOMain(6, 3);
 	//1st argument -> index of the function(1~7)
 	//2nd argument -> index of the particle(1~3)
+	
 	pso.execute();
 	pso.fileWrite("PSOtest.dat");
     }

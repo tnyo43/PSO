@@ -43,20 +43,13 @@ public class LFPSO_Particle extends Particle{
     }
 
     @Override
-    public int getAmount(){
-	return 40;
+    public void printType(){
+	System.out.println("Levy Flight PSO");
     }
 
     @Override
-    public void updatePBest(){
-	double score = function.criterion(positions);
-	if(score > this.score){
-	    this.score = score;
-	    pBestPositions = positions.clone();
-	    trial = 0;
-	}else{
-	    trial++;
-	}
+    public int getAmount(){
+	return 40;
     }
 
     protected void leavyFlight(Particle gBest){
@@ -80,38 +73,28 @@ public class LFPSO_Particle extends Particle{
 	    }
 	}
     }
-
+    
     @Override
-    public void update(Particle gbest, int iter, Particle[] particles, int index){
+    public void updatePBest(){
+	double score = function.criterion(positions);
+	if(score > this.score){
+	    this.score = score;
+	    pBestPositions = positions.clone();
+	    trial = 0;
+	}else{
+	    trial++;
+	}
+    }
+    
+    @Override
+    public void update(Particle gbest, double w, Particle[] particles, int index){
 	if(trial < LIMIT){
-	    updateVelocity(gbest, iter);
+	    updateVelocity(gbest, w, 2);
 	    updatePosition();
 	}else{
 	    leavyFlight(gbest);
 	    trial = 0;
 	}
 	updatePBest();
-    }
-
-    protected void updateVelocity(Particle gbest, int iter){
-	double ro_max = 2;
-	
-	double rand1 = rand.nextDouble() * ro_max;
-	double rand2 = rand.nextDouble() * ro_max;
-
-	double w = 1-iter/200000.0;
-
-	for(int i = 0; i < DIMENSION; i++){
-	    velocities[i] = w*velocities[i] + rand1*(pBestPositions[i] - positions[i]) + rand2*(gbest.getPBestPosition(i) - positions[i]);
-	    double v = velocities[i];
-
-	    if     (v < -1*width*0.2) velocities[i] = -1*width*0.2;
-	    else if(v >    width*0.2) velocities[i] =    width*0.2;
-	}
-    }
-
-    @Override
-    public void printType(){
-	System.out.println("Levy Flight PSO");
     }
 }

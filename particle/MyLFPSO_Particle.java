@@ -10,7 +10,7 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 
     final static int LIMIT = 10;
     final static int DISTANCE = 30;
-    final static int THRESHOLD = 20
+    final static int THRESHOLD = 10;
     private int trial;
 
     private double beta;
@@ -46,6 +46,7 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 	}
     }
 
+    @Override
     protected void addTrial(){
 	trial++;
     }
@@ -57,7 +58,7 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 	    double[] p = particles[i].getCurrentPositions();
 
 	    double sum = 0;
-	    for(int j = 0; j < DIMENSION; i++){
+	    for(int j = 0; j < DIMENSION; j++){
 		sum += Math.pow((p0[j]-p[j]),2);
 	    }
 
@@ -68,9 +69,12 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 	}
     }
 
-    public void update(Particle gbest, int iter, Particle[] particles, int index){
+    @Override
+    public void update(Particle gbest, double w, Particle[] particles, int index){
+       	lookAround(particles, index);
+
 	if(trial < LIMIT){
-	    updateVelocity(gbest, iter);
+	    updateVelocity(gbest, w, 2);
 	    updatePosition();
 	}else{
 	    leavyFlight(gbest);

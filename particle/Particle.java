@@ -4,7 +4,7 @@ import jp.ac.anan_nct.pso.function.*;
 
 import java.util.Random;
 
-public class Particle implements ParticleInterface{
+public class Particle{
     protected static Function function;
 
     protected static int DIMENSION;
@@ -59,7 +59,6 @@ public class Particle implements ParticleInterface{
 	this.pBestPositions = original.getPBestPositions();
     }
 
-    @Override
     public Particle clone(){
 	return new Particle(this);
     }
@@ -72,7 +71,6 @@ public class Particle implements ParticleInterface{
 	return 10+(int)(2*Math.sqrt(DIMENSION));
     }
 
-    @Override
     public double criterion(){
 	return function.criterion(positions);
     }
@@ -80,20 +78,63 @@ public class Particle implements ParticleInterface{
     protected void addTrial(){
     }
 
-    @Override
-    public void update(Particle gbest, int iter, Particle[] particles, int index){
-	updateVelocity(gbest, iter);
-	updatePosition();
-	updatePBest();
+    public void printCurrentPosition(){
+	System.out.println("current position:");
+	for(int i = 0; i < DIMENSION; i++){
+	    System.out.println("X" + i + ":" + positions[i]);
+	}
     }
 
-    private void updateVelocity(Particle gbest, int iter){
-	double ro_max = 1.1931;
-	
-	double rand1 = rand.nextDouble() * ro_max;
-	double rand2 = rand.nextDouble() * ro_max;
+    public String toString(){
+	String pos = "";
+	for(int i = 0; i < DIMENSION; i++){
+	    pos += ((i+1) + " " + positions[i] + "\n");
+	}
+	return pos;
+    }
 
-	double w = 0.7213;
+    public void print(){
+	printPBestPosition();
+	printScore();
+    }
+
+    public void printPBestPosition(){
+	System.out.println("best position:");
+	for(int i = 0; i < DIMENSION; i++){
+	    System.out.println("X" + i + ":" + pBestPositions[i]);
+	}
+    }
+
+    public void printScore(){
+	System.out.println("best score:" + score + "\n");
+    }
+
+    public void printType(){
+	System.out.println("state-of-the-art PSO");
+    }
+
+    public int getDimension(){
+	return DIMENSION;
+    }
+    public double getCurrentPosition(int i){
+	return positions[i];
+    }
+    public double[] getCurrentPositions(){
+	return positions;
+    }
+    public double getScore(){
+	return score;
+    }
+    public double getPBestPosition(int i){
+	return pBestPositions[i];
+    }
+    public double[] getPBestPositions(){
+	return pBestPositions;
+    }
+    
+    protected void updateVelocity(Particle gbest, double w, double c1){
+	double rand1 = rand.nextDouble() * c1;
+	double rand2 = rand.nextDouble() * c1;
         
 	for(int i = 0; i < DIMENSION; i++){
 	    velocities[i] = w*velocities[i] + rand1*(pBestPositions[i] - positions[i]) + rand2*(gbest.getPBestPosition(i) - positions[i]);
@@ -119,8 +160,7 @@ public class Particle implements ParticleInterface{
 	    }
 	}
     }
-
-    @Override
+    
     public void updatePBest(){
 	double score = criterion();
 	if(score > this.score){
@@ -129,68 +169,10 @@ public class Particle implements ParticleInterface{
 	}
     }
 
-    @Override
-    public void printCurrentPosition(){
-	System.out.println("current position:");
-	for(int i = 0; i < DIMENSION; i++){
-	    System.out.println("X" + i + ":" + positions[i]);
-	}
+    public void update(Particle gbest, double w, Particle[] particles, int index){
+	updateVelocity(gbest, 0.7213, 1.1931);
+	updatePosition();
+	updatePBest();
     }
 
-    @Override
-    public String toString(){
-	String pos = "";
-	for(int i = 0; i < DIMENSION; i++){
-	    pos += ((i+1) + " " + positions[i] + "\n");
-	}
-	return pos;
-    }
-
-    @Override
-    public void print(){
-	printPBestPosition();
-	printScore();
-    }
-
-    @Override
-    public void printPBestPosition(){
-	System.out.println("best position:");
-	for(int i = 0; i < DIMENSION; i++){
-	    System.out.println("X" + i + ":" + pBestPositions[i]);
-	}
-    }
-
-    @Override
-    public void printScore(){
-	System.out.println("best score:" + score + "\n");
-    }
-
-    public void printType(){
-	System.out.println("state-of-the-art PSO");
-    }
-
-    @Override
-    public int getDimension(){
-	return DIMENSION;
-    }
-    @Override
-    public double getCurrentPosition(int i){
-	return positions[i];
-    }
-    @Override
-    public double[] getCurrentPositions(){
-	return positions;
-    }
-    @Override
-    public double getScore(){
-	return score;
-    }
-    @Override
-    public double getPBestPosition(int i){
-	return pBestPositions[i];
-    }
-    @Override
-    public double[] getPBestPositions(){
-	return pBestPositions;
-    }
 }
