@@ -32,8 +32,6 @@ class MyLFPSOTest extends PSOMain{
     }
 
     private void init(MyLFPSO_Particle p, int limit, int threshold){
-	if(p == null){System.out.println("hogw");
-	}
 	particles = new MyLFPSO_Particle[P];
 	gBest = null;
 	

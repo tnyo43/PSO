@@ -9,7 +9,7 @@ import java.io.*;
 class PSOMain{
     Function function;
     
-    static int P = 30; //population size
+    static int P = 40; //population size
     final static int FEs = 200000; //number of function evaluations
     static int DIMENSION; //dimension of the search area
     static int RUN = 30; //number of running the algorithms
