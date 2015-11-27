@@ -44,12 +44,10 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 
     @Override
     public void updatePBest(){
-	double score = function.criterion(positions);
-	if(score > this.score){
-	    this.score = score;
+	double currentScore = function.criterion(positions);
+	if(currentScore > this.score){
+	    this.score = currentScore;
 	    pBestPositions = positions.clone();
-	}else{
-	    
 	}
     }
 
@@ -70,7 +68,7 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
 	    }
 
 	    if(!(sum < THRESHOLD)){
-		trial++;
+		addTrial();
 		particles[i].addTrial();
 	    }
 	}

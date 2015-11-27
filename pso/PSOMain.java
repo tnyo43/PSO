@@ -9,7 +9,7 @@ import java.io.*;
 class PSOMain{
     Function function;
     
-    static int P = 30; //population size
+    static int P = 40; //population size
     final static int FEs = 200000; //number of function evaluations
     static int DIMENSION; //dimension of the search area
     static int RUN = 30; //number of running the algorithms
@@ -133,7 +133,7 @@ class PSOMain{
     }
     
     public static void main(String[] args){
-	PSOMain pso = new PSOMain(6, 1, 30);
+	PSOMain pso = new PSOMain(6, 3, 30);
 	//1st argument -> index of the function(1~7)
 	//2nd argument -> index of the particle(1~3)
 	//3rd argument -> dimension of the search area

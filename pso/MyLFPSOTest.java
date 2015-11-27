@@ -24,16 +24,14 @@ class MyLFPSOTest extends PSOMain{
     }
 
     private static int getThreshold(int t){
-	return t*2 + 10;
+	return t*5 + 10;
     }
 
     private static int getLimit(int l){
-	return l*2 + 10;
+	return l*2 + 5;
     }
 
     private void init(MyLFPSO_Particle p, int limit, int threshold){
-	if(p == null){System.out.println("hogw");
-	}
 	particles = new MyLFPSO_Particle[P];
 	gBest = null;
 	
@@ -83,15 +81,16 @@ class MyLFPSOTest extends PSOMain{
 
     private void execute(){
 	for(int l = 0; l < limitNum; l++){
-	    double limit = getLimit(l);
+	    int limit = getLimit(l);
 	    
 	    for(int t = 0; t < thresholdNum; t++){
-		double threshold = getThreshold(t);
+		int threshold = getThreshold(t);
 
+		double s = 0;
 		for(int lo = 1; lo <= LOOP; lo++){
-		    evaluationValues[l][t] += runEvaluation(l, t);
+		    s += runEvaluation(limit, threshold);
 		}
-		evaluationValues[l][t] /= LOOP;
+		evaluationValues[l][t] = s/LOOP;
 		System.out.println("limit = " + limit + ": threshold = " + threshold);
 		System.out.println("  " + evaluationValues[l][t]);
 	    }
