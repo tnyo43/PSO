@@ -24,11 +24,11 @@ class MyLFPSOTest extends PSOMain{
     }
 
     private static int getThreshold(int t){
-	return t*5 + 10;
+	return t*5 + 450;
     }
 
     private static int getLimit(int l){
-	return l*2 + 5;
+	return l*2 + 15;
     }
 
     private void init(MyLFPSO_Particle p, int limit, int threshold){
@@ -49,6 +49,18 @@ class MyLFPSOTest extends PSOMain{
 	}
     }
 
+    @Override
+    protected void updateGBest(){
+	double gBestScore = gBest.getScore();
+	for(MyLFPSO_Particle p : particles){
+	    double piBestScore = p.getScore();
+	    if(piBestScore > gBestScore){
+		gBestScore = piBestScore;
+		gBest = p.clone();
+	    }
+	}
+    }
+
     private double runEvaluation(int limit, int threshold){
 	
 	init(new MyLFPSO_Particle(function, DIMENSION), limit, threshold);
@@ -58,7 +70,15 @@ class MyLFPSOTest extends PSOMain{
 		particles[i].update(gBest, 1.0-((i+1)/FEs), particles, i);
 	    }
 	    updateGBest();
+	    // System.out.println(gBest.getScore());
 	}
+	/*
+	for(int i = 0; i < P; i++){
+	    System.out.println(i + ":");
+	    particles[i].print();
+	}
+	*/
+	System.out.println(gBest.getScore());
 	return gBest.getScore();
     }
 
@@ -93,6 +113,7 @@ class MyLFPSOTest extends PSOMain{
 		evaluationValues[l][t] = s/LOOP;
 		System.out.println("limit = " + limit + ": threshold = " + threshold);
 		System.out.println("  " + evaluationValues[l][t]);
+		
 	    }
 	}
 	fileWrite();

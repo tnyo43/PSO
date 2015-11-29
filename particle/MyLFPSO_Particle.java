@@ -78,6 +78,7 @@ public class MyLFPSO_Particle extends LFPSO_Particle{
     public void update(Particle gbest, double w, Particle[] particles, int index){
        	lookAround(particles, index);
 
+	//	System.out.println(trial + " " + LIMIT);
 	if(trial < LIMIT){
 	    updateVelocity(gbest, w, 2);
 	    updatePosition();

@@ -15,6 +15,8 @@ public class LFPSO_Particle extends Particle{
     private double sigma_u;
     private double sigma_v;
 
+    protected int lfCount;
+
     public LFPSO_Particle(Function function, int dimension){
 	super(function, dimension);
 	
@@ -26,6 +28,8 @@ public class LFPSO_Particle extends Particle{
 			       ,1/beta);
 	sigma_v = 1;
 	//sigma_u, _v are standard deviations
+	
+	lfCount = 0;
     }
     
     protected LFPSO_Particle(Particle original){
@@ -52,6 +56,17 @@ public class LFPSO_Particle extends Particle{
 	return 40;
     }
 
+    public void printLfCount(){
+	System.out.println(lfCount);
+    }
+
+    @Override
+    public void print(){
+	printPBestPosition();
+	printScore();
+	printLfCount();
+    }
+
     protected void leavyFlight(Particle gBest){
 	
 	double u = rand.nextGaussian() * sigma_u;
@@ -72,6 +87,8 @@ public class LFPSO_Particle extends Particle{
 		System.exit(-1);
 	    }
 	}
+
+	lfCount++;
     }
     
     @Override

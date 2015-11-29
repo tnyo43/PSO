@@ -121,6 +121,12 @@ class PSOMain{
 	    results[t] += gBest.getScore();
 	    System.out.println((r) + "\t" + (t/10000) + "\t" + gBest.getScore());
 	}
+	/*
+	for(int i = 0; i < P; i++){
+	    System.out.println(i + ":");
+	    particles[i].print();
+	}
+	*/
 	finals[r] = gBest.getScore();
 	
 	init(gBest);
